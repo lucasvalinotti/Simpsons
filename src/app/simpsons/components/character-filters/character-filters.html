@@ -1,0 +1,26 @@
+<form class="filters" (submit)="$event.preventDefault()" aria-label="Filtros de personajes">
+  <label class="name-field">
+    <span>Buscar por nombre</span>
+    <span class="search-input">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+      <input type="search" name="name" placeholder="Ej. Homero Simpson" [ngModel]="name" (ngModelChange)="name = $event; emitFilters()" />
+    </span>
+  </label>
+  <label>
+    <span>Estado</span>
+    <select name="status" [ngModel]="status" (ngModelChange)="status = $event; emitFilters()">
+      <option value="">Todos los estados</option>
+      <option value="Vivo">Vivo</option>
+      <option value="Fallecido">Fallecido</option>
+    </select>
+  </label>
+  <label>
+    <span>Género</span>
+    <select name="gender" [ngModel]="gender" (ngModelChange)="gender = $event; emitFilters()">
+      <option value="">Todos los géneros</option>
+      <option value="Masculino">Masculino</option>
+      <option value="Femenino">Femenino</option>
+    </select>
+  </label>
+  <button type="button" (click)="clear()">Limpiar</button>
+</form>

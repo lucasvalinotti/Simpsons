@@ -1,0 +1,10 @@
+:host { display: block; }
+.state-panel { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 198px; padding: 24px 20px; border: 2px solid #241d35; border-radius: 11px; background: #fff; box-shadow: 5px 5px 0 #241d35; color: #241d35; text-align: center; }
+.state-icon { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #241d35; border-radius: 50%; background: #ffdf4b; font-size: 27px; font-weight: 900; line-height: 1; }
+h2 { margin: 12px 0 6px; font-family: var(--font-titulos, "Trebuchet MS", Arial, sans-serif); font-size: 21px; font-weight: 900; line-height: 1.2; }
+p { margin: 0 0 12px; color: #514c62; font-size: 13px; line-height: 1.4; }
+button, a { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; min-height: 37px; padding: 0 13px; border: 1.5px solid #241d35; border-radius: 6px; background: #ffdf4b; box-shadow: 3px 3px 0 #241d35; color: #241d35; font: inherit; font-size: 13px; font-weight: 900; text-decoration: none; cursor: pointer; }
+button:hover, a:hover { background: #ffe875; }
+button:focus-visible, a:focus-visible { outline: 3px solid #241d35; outline-offset: 4px; }
+.neutral-action { background: #fff; box-shadow: none; }
+.neutral-action:hover { background: #fffaf0; }

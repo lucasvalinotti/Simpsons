@@ -1,0 +1,23 @@
+:root {
+  --font-titulos: "Trebuchet MS", Arial, sans-serif;
+  --font-texto: system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-texto);
+}
+
+h1,
+h2,
+h3,
+.brand {
+  font-family: var(--font-titulos);
+  font-weight: 900;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}

@@ -1,0 +1,28 @@
+<main class="characters-page">
+  <div class="page-content">
+    <h1>Favoritos</h1>
+    <p class="subtitle">Tus vecinos preferidos de Springfield, todos en un mismo lugar.</p>
+
+    <app-character-filters #filterControls (filtersChange)="updateFilters($event)" />
+
+    @if (loadError()) {
+      <app-error-state (retry)="retryLoad()" />
+    } @else {
+      <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ filteredCharacters().length }} personajes</p>
+
+      @if (visibleCharacters().length) {
+        <div class="cards-grid">
+          @for (character of visibleCharacters(); track character.id) {
+            <app-character-card [character]="character" [isFavorite]="true" (favoriteToggle)="toggleFavorite($event)" />
+          }
+        </div>
+      } @else {
+        <app-no-results-state [favoritesEmpty]="!favorites.ids().size" (clear)="filterControls.clear()" />
+      }
+
+      @if (totalPages() > 1) {
+        <app-character-pagination [page]="page()" [totalPages]="totalPages()" (pageChange)="page.set($event)" />
+      }
+    }
+  </div>
+</main>
