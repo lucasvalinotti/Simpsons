@@ -3,6 +3,7 @@
 }
 
 .site-header {
+  view-transition-name: site-header;
   border-bottom: 2px solid #241d35;
   background: #ffdf4b;
   color: #241d35;

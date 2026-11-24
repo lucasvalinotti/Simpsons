@@ -3,9 +3,11 @@ import { CharacterCard } from '../../components/character-card/character-card';
 import { CharacterFilters, CharacterFiltersValue } from '../../components/character-filters/character-filters';
 import { CharacterPagination } from '../../components/character-pagination/character-pagination';
 import { NoResultsState } from '../../components/no-results-state/no-results-state';
-import { CHARACTERS, Character } from '../../characters.data';
-import { FavoritesService } from '../../favorites.service';
 import { ErrorState } from '../../components/error-state/error-state';
+import { Character } from '../../characters.data';
+import { FavoritesService } from '../../favorites.service';
+import { CharacterService } from '../../services/character.service';
+import { Result } from '../../interfaces/CharacterResponse';
 
 @Component({
   selector: 'app-characters-page',
@@ -14,9 +16,11 @@ import { ErrorState } from '../../components/error-state/error-state';
   styleUrl: './characters-page.css',
 })
 export default class CharactersPage {
+  private readonly characterService = inject(CharacterService);
   readonly favorites = inject(FavoritesService);
   private readonly pageSize = 6;
   readonly characters = signal<Character[]>([]);
+  readonly loading = signal(true);
   readonly loadError = signal(false);
   readonly filters = signal<CharacterFiltersValue>({ name: '', status: '', gender: '' });
   readonly page = signal(1);
@@ -49,12 +53,32 @@ export default class CharactersPage {
   }
 
   retryLoad(): void {
-    try {
-      if (!Array.isArray(CHARACTERS)) throw new Error('Datos de personajes inválidos');
-      this.characters.set(CHARACTERS);
-      this.loadError.set(false);
-    } catch {
-      this.loadError.set(true);
-    }
+    this.loading.set(true);
+    this.loadError.set(false);
+    this.characterService.getCharacters().subscribe({
+      next: (response) => {
+        this.characters.set(response.results.map((result) => this.toCharacter(result)));
+        this.page.set(1);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loadError.set(true);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  private toCharacter(result: Result): Character {
+    return {
+      id: result.id,
+      name: result.name,
+      age: result.age ?? undefined,
+      occupation: result.occupation || 'Sin datos',
+      status: result.status === 'Alive' ? 'Vivo' : result.status === 'Deceased' || result.status === 'Dead' ? 'Fallecido' : 'Desconocido',
+      gender: result.gender === 'Male' ? 'Masculino' : result.gender === 'Female' ? 'Femenino' : 'Desconocido',
+      image: result.portrait_path ? `https://cdn.thesimpsonsapi.com/500${result.portrait_path}` : '',
+      color: '#a9dffc',
+      phrases: result.phrases ?? [],
+    };
   }
 }

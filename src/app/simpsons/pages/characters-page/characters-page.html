@@ -6,23 +6,27 @@
     <app-character-filters #filterControls (filtersChange)="updateFilters($event)" />
 
     @if (loadError()) {
-      <app-error-state (retry)="retryLoad()" />
+    <app-error-state (retry)="retryLoad()" />
+    } @else if (loading()) {
+    <p class="result-count" role="status">Cargando personajes...</p>
     } @else {
-      <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ filteredCharacters().length }} personajes</p>
+    <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ filteredCharacters().length }}
+      personajes</p>
 
-      @if (visibleCharacters().length) {
-        <div class="cards-grid">
-          @for (character of visibleCharacters(); track character.id) {
-            <app-character-card [character]="character" [isFavorite]="favorites.ids().has(character.id)" (favoriteToggle)="toggleFavorite($event)" />
-          }
-        </div>
-      } @else {
-        <app-no-results-state (clear)="filterControls.clear()" />
+    @if (visibleCharacters().length) {
+    <div class="cards-grid">
+      @for (character of visibleCharacters(); track character.id) {
+      <app-character-card [character]="character" [isFavorite]="favorites.ids().has(character.id)"
+        (favoriteToggle)="toggleFavorite($event)" />
       }
+    </div>
+    } @else {
+    <app-no-results-state (clear)="filterControls.clear()" />
+    }
 
-      @if (totalPages() > 1) {
-        <app-character-pagination [page]="page()" [totalPages]="totalPages()" (pageChange)="page.set($event)" />
-      }
+    @if (totalPages() > 1) {
+    <app-character-pagination [page]="page()" [totalPages]="totalPages()" (pageChange)="page.set($event)" />
+    }
     }
   </div>
 </main>
