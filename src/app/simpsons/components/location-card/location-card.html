@@ -1,0 +1,15 @@
+<article class="location-card">
+  <a class="location-image" [routerLink]="['/location', location.id]" [attr.aria-label]="'Ver ' + location.name">
+    @if (imageUrl && !imageFailed()) {
+    <img [src]="imageUrl" [alt]="location.name" loading="lazy" (error)="imageFailed.set(true)" />
+    } @else {
+    <span>Imagen no disponible</span>
+    }
+  </a>
+  <div class="location-info">
+    <span class="location-use">{{ location.use || 'Uso no especificado' }}</span>
+    <h2 [routerLink]="['/location', location.id]">{{ location.name }}</h2>
+    <p>{{ location.town || 'Pueblo desconocido' }}</p>
+    <a class="detail-link" [routerLink]="['/location', location.id]">Ver ubicación</a>
+  </div>
+</article>

@@ -1,4 +1,4 @@
-<nav class="pagination" aria-label="Páginas de personajes">
+<nav class="pagination" [attr.aria-label]="ariaLabel">
   <button type="button" [disabled]="page === 1" (click)="pageChange.emit(page - 1)">Anterior</button>
   @for (item of pages; track $index) {
     @if (item === '…') {

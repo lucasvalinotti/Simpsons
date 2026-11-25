@@ -39,14 +39,28 @@ export class FavoritesService {
         : [...favorites, character];
     });
 
+    this.saveLocalStorage();
+  }
+
+  updateGender(id: number, gender: string): void {
+    if (!gender.trim()) return;
+    const favorite = this.favorites().find((character) => character.id === id);
+    if (!favorite || favorite.gender === gender) return;
+    this.favorites.update((favorites) => favorites.map((character) =>
+      character.id === id ? { ...character, gender } : character
+    ));
+    this.saveLocalStorage();
+  }
+
+  isFavorite(id: number): boolean {
+    return this.favorites().some((character) => character.id === id);
+  }
+
+  private saveLocalStorage(): void {
     try {
       localStorage.setItem(this.localStorageKey, JSON.stringify(this.favorites()));
     } catch {
       // Si el navegador bloquea el almacenamiento, conserva el estado en memoria.
     }
-  }
-
-  isFavorite(id: number): boolean {
-    return this.favorites().some((character) => character.id === id);
   }
 }

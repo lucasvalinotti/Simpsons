@@ -3,15 +3,36 @@
     <h1>Favoritos</h1>
     <p class="subtitle">Tus vecinos favoritos de Springfield en un solo lugar.</p>
 
-    @if (favoritesService.favorites().length) {
+    <app-character-filters #filterControls (filtersChange)="updateFilters($event)" />
+
+    @if (needsGender()) {
+      @if (genderLoadState() === 'error') {
+        <app-error-state title="No pudimos completar los favoritos"
+          message="Falta el género de algunos personajes guardados. Podés intentar de nuevo."
+          (retry)="prepareGender()" />
+      } @else {
+        <p class="result-count" role="status">Preparando filtro de género…</p>
+      }
+    } @else {
+    <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ totalMatches() }} personajes</p>
+
+    @if (visibleFavorites().length) {
       <div class="cards-grid">
-        @for (favorite of favoritesService.favorites(); track favorite.id) {
+        @for (favorite of visibleFavorites(); track favorite.id) {
           <app-character-card [character]="favorite" [isFavorite]="favoritesService.isFavorite(favorite.id)"
-            (favoriteToggle)="favoritesService.toggleFavorites(favorite)" />
+            (favoriteToggle)="toggleFavorite(favorite)" />
         }
       </div>
+    } @else if (favoritesService.favorites().length) {
+      <app-no-results-state (clear)="filterControls.clear()" />
     } @else {
       <app-no-results-state [favoritesEmpty]="true" />
+    }
+
+    @if (totalPages() > 1) {
+      <app-character-pagination [page]="currentPage()" [totalPages]="totalPages()"
+        (pageChange)="changePage($event)" />
+    }
     }
 
   </div>

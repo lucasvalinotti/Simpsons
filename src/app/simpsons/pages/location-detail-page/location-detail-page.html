@@ -1,0 +1,52 @@
+<main class="location-detail-page">
+  <div class="detail-content">
+    <a class="back-link" routerLink="/locations">Volver a ubicaciones</a>
+
+    @if (loadState() === 'loading') {
+      <div class="detail-skeleton" role="status" aria-label="Cargando ubicación">
+        <div class="skeleton image-skeleton"></div>
+        <div class="skeleton-info">
+          <div class="skeleton title-skeleton"></div>
+          <div class="skeleton line-skeleton"></div>
+          <div class="skeleton line-skeleton"></div>
+        </div>
+      </div>
+    } @else if (loadState() === 'ready' && location(); as current) {
+      <div class="detail-layout">
+        <div class="location-image" [class.no-image]="!imageUrl() || imageFailed()">
+          @if (imageUrl() && !imageFailed()) {
+            <img [src]="imageUrl()" [alt]="current.name" (error)="imageFailed.set(true)" />
+          } @else {
+            <span>Imagen no disponible</span>
+          }
+        </div>
+        <div class="detail-info">
+          <span class="location-use">{{ current.use || 'Uso no especificado' }}</span>
+          <h1>{{ current.name }}</h1>
+          <dl>
+            <div><dt>Pueblo</dt><dd>{{ current.town || 'Desconocido' }}</dd></div>
+            <div><dt>Uso</dt><dd>{{ current.use || 'Sin datos' }}</dd></div>
+          </dl>
+          <section class="description">
+            <h2>Sobre esta ubicación</h2>
+            <p>{{ current.description || 'No hay descripción disponible.' }}</p>
+          </section>
+          @if (current.first_appearance_ep?.name || current.first_appearance_sh?.name) {
+            <section class="first-appearance">
+              <h2>Primera aparición</h2>
+              <p>{{ current.first_appearance_ep?.name || current.first_appearance_sh?.name }}</p>
+            </section>
+          }
+        </div>
+      </div>
+    } @else if (loadState() === 'notFound') {
+      <section class="missing-location" role="status">
+        <h2>Ubicación inexistente</h2>
+        <p>No encontramos el lugar solicitado.</p>
+        <a routerLink="/locations">Explorar ubicaciones</a>
+      </section>
+    } @else {
+      <app-error-state title="No pudimos cargar la ubicación" (retry)="retryLoad()" />
+    }
+  </div>
+</main>

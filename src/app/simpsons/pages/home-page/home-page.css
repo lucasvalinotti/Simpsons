@@ -66,6 +66,8 @@ p {
   line-height: 1.5;
 }
 
+.explore-links { display: flex; flex-wrap: wrap; gap: 10px; }
+
 .explore-link {
   box-sizing: border-box;
   display: inline-flex;

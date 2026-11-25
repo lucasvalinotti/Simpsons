@@ -76,7 +76,8 @@ export default class CharactersPage {
       name: character.name,
       occupation: character.occupation,
       portrait_path: character.image,
-      status: character.status
+      status: character.status,
+      gender: character.gender,
     }
     this.favorites.toggleFavorites(favoriteCharacter);
   }

@@ -1,0 +1,16 @@
+<article class="episode-card">
+  <a class="episode-image" [routerLink]="['/episode', episode.id]" [attr.aria-label]="'Ver ' + episode.name">
+    @if (imageUrl && !imageFailed()) {
+    <img [src]="imageUrl" [alt]="episode.name" loading="lazy" (error)="imageFailed.set(true)" />
+    } @else {
+    <span>Imagen no disponible</span>
+    }
+  </a>
+  <div class="episode-info">
+    <span class="episode-meta">Temporada {{ episode.season }} · Episodio {{ episode.episode_number }}</span>
+    <h2><a [routerLink]="['/episode', episode.id]">{{ episode.name }}</a></h2>
+    <p class="airdate">Estreno: {{ episode.airdate | spanishDate }}</p>
+    <p class="synopsis">{{ episode.synopsis || 'Sin sinopsis disponible.' }}</p>
+    <a class="detail-link" [routerLink]="['/episode', episode.id]">Ver episodio</a>
+  </div>
+</article>

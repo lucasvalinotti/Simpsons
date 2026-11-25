@@ -1,0 +1,32 @@
+.location-detail-page { min-height: calc(100dvh - 80px); padding: 31px 24px 48px; background: #fffaf0; color: #241d35; }
+.detail-content { max-width: 1180px; margin: 0 auto; }
+.back-link, .missing-location a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 2px solid #241d35; border-radius: 8px; background: #fff; color: #241d35; font-size: 15px; font-weight: 900; text-decoration: none; }
+.back-link:hover, .missing-location a:hover { background: #ffdf4b; }
+.detail-layout, .detail-skeleton { display: grid; grid-template-columns: minmax(0, 490px) minmax(0, 1fr); gap: 30px; margin-top: 22px; }
+.location-image { display: grid; place-items: center; aspect-ratio: 1.11; overflow: hidden; border: 3px solid #241d35; border-radius: 14px; background: #a9dffc; box-shadow: 6px 6px 0 #241d35; }
+.location-image.no-image { background: #d9c0f5; }
+.location-image img { width: 100%; height: 100%; object-fit: cover; }
+.location-image span { padding: 16px; font-weight: 900; text-align: center; }
+.detail-info { min-width: 0; }
+.location-use { display: inline-block; padding: 4px 8px; border: 1px solid #241d35; border-radius: 15px; background: #dbf6d9; font-size: 12px; font-weight: 900; }
+h1 { margin: 12px 0 18px; font-family: var(--font-titulos, "Trebuchet MS", Arial, sans-serif); font-size: clamp(38px, 5vw, 62px); line-height: 1.05; }
+dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; }
+dl div { padding: 11px; border: 2px solid #241d35; border-radius: 7px; background: #fff; }
+dt { color: #514c62; font-size: 13px; font-weight: 900; }
+dd { margin: 5px 0 0; font-size: 15px; font-weight: 900; }
+section h2 { margin: 0 0 8px; font-family: var(--font-titulos, "Trebuchet MS", Arial, sans-serif); }
+.description, .first-appearance { margin-top: 22px; }
+section p { margin: 0; line-height: 1.5; }
+.missing-location { max-width: 680px; margin: 24px auto 0; padding: 24px; border: 2px solid #241d35; border-radius: 11px; background: #fff; text-align: center; }
+.missing-location p { margin-bottom: 14px; }
+.skeleton { border-radius: 8px; background: #e7e4ea; background-image: linear-gradient(90deg, transparent 20%, #ffffffa8 50%, transparent 80%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+.image-skeleton { aspect-ratio: 1.11; }
+.skeleton-info { display: grid; align-content: start; gap: 15px; }
+.title-skeleton { width: 70%; height: 60px; }
+.line-skeleton { height: 64px; }
+@keyframes shimmer { to { background-position-x: -200%; } }
+app-error-state { display: block; max-width: 948px; margin: 22px auto 0; }
+a:focus-visible { outline: 3px solid #241d35; outline-offset: 3px; }
+@media (max-width: 850px) { .detail-layout, .detail-skeleton { grid-template-columns: 1fr; } .location-image, .image-skeleton { width: min(100%, 490px); } }
+@media (max-width: 500px) { .location-detail-page { padding-inline: 16px; } dl { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }

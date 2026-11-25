@@ -4,4 +4,5 @@ export interface FavoriteCharacter {
   occupation: string;
   portrait_path: string;
   status: string;
+  gender?: string;
 }

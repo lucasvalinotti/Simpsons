@@ -21,8 +21,8 @@
     <span class="skeleton occupation-skeleton shimmer"></span>
     <span class="skeleton button-skeleton shimmer"></span>
     } @else {
-    <span class="status" [class.deceased]="character.status === 'Fallecido'"><span class="status-dot"></span>{{
-      character.status }}</span>
+    <span class="status" [class.deceased]="displayStatus === 'Fallecido'"><span class="status-dot"></span>{{
+      displayStatus }}</span>
     <h2 [routerLink]="['/character', character.id]">{{ character.name }}</h2>
     <p>{{ character.occupation }}</p>
     <a [routerLink]="['/character', character.id]">Ver ficha</a>

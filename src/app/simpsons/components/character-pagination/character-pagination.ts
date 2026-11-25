@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class CharacterPagination {
   @Input() page = 1;
   @Input() totalPages = 1;
+  @Input() ariaLabel = 'Páginas de personajes';
   @Output() pageChange = new EventEmitter<number>();
 
   get pages(): (number | '…')[] {
