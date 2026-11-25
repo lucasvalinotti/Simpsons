@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'spanishDate', standalone: true })
 export class SpanishDatePipe implements PipeTransform {
   transform(value: string | null | undefined): string {
+
     const date = value?.trim();
     if (!date) return 'Desconocido';
 

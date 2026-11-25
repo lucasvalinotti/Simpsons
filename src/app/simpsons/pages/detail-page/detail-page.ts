@@ -7,10 +7,11 @@ import { ErrorState } from '../../components/error-state/error-state';
 import { FavoritesService } from '../../services/favorites.service';
 import { CharacterByID } from '../../interfaces/CharacterByIdResponse';
 import { CharacterService } from '../../services/character.service';
+import { SpanishDatePipe } from '../../pipes/spanish-date.pipe';
 
 @Component({
   selector: 'app-detail-page',
-  imports: [CharacterNotFound, ErrorState, RouterLink],
+  imports: [CharacterNotFound, ErrorState, RouterLink, SpanishDatePipe],
   templateUrl: './detail-page.html',
   styleUrl: './detail-page.css',
 })
@@ -53,5 +54,48 @@ export default class DetailPage implements OnInit {
         this.loadState.set(error.status === 404 ? 'notFound' : 'error');
       },
     });
+  }
+
+  get displayStatus(): string {
+    const status = this.character!.status;
+
+    switch (status) {
+      case 'Alive':
+        return 'Vivo';
+      case 'Dead':
+      case 'Deceased':
+        return 'Fallecido';
+      case 'Unknown':
+        return 'Desconocido';
+      default:
+        return status;
+    }
+  }
+
+  get displayGender(): string {
+    const gender = this.character!.gender;
+
+    switch (gender) {
+      case 'Male':
+        return 'Masculino';
+      case 'Female':
+        return 'Femenino';
+      case 'Unknown':
+        return 'Desconocido';
+      default:
+        return "Desconocido";
+    }
+  }
+
+  get displayFirstAppearance(): string {
+    const chapter = this.character?.first_appearance_ep?.name;
+    const season = this.character?.first_appearance_ep?.season;
+    if(!chapter || !season) return 'Desconocido';
+    return `${chapter}-T${season}`
+  }
+
+  get displayBirthdate(): string | null {
+    if(this.character?.birthdate) return this.character!.birthdate.toString();
+    return null;
   }
 }

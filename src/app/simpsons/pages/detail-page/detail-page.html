@@ -34,7 +34,7 @@
 
       <div class="detail-info">
         <span class="status" [class.unknown]="character.status === 'Desconocido'"
-          [class.deceased]="character.status === 'Fallecido'"><span class="status-dot"></span>{{ character.status
+          [class.deceased]="character.status === 'Fallecido'"><span class="status-dot"></span>{{ displayStatus
           }}</span>
         <h1>{{ character.name }}</h1>
 
@@ -44,8 +44,12 @@
             <dd>{{ character.age ? character.age : 'Desconocido' }}</dd>
           </div>
           <div class="fact">
+            <dt>Cumpleaños</dt>
+            <dd>{{ displayBirthdate | spanishDate }}</dd>
+          </div>
+          <div class="fact">
             <dt>Género</dt>
-            <dd>{{ character.gender ? character.gender : 'Desconocido' }}</dd>
+            <dd>{{ displayGender }}</dd>
           </div>
           <div class="fact">
             <dt>Ocupación</dt>
@@ -53,7 +57,11 @@
           </div>
           <div class="fact">
             <dt>Estado</dt>
-            <dd>{{ character.status ? character.status : 'Desconocido' }}</dd>
+            <dd>{{ displayStatus }}</dd>
+          </div>
+          <div class="fact">
+            <dt>Primer Aparición</dt>
+            <dd>{{ displayFirstAppearance }}</dd>
           </div>
         </dl>
 

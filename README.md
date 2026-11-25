@@ -1,7 +1,24 @@
 # SimpsonsPrueba
 
-## Pantalla de personajes
+## Ejecutar en desarrollo
 
+Necesitás Node.js 24.x, npm y Git.
+
+~~~bash
+git clone https://github.com/lucasvalinotti/Simpsons.git
+cd Simpsons
+npm ci
+npm start
+~~~
+
+Abrí http://localhost:4200. Para detener el servidor, presioná Ctrl + C.
+
+## Desiciones técnicas
+
+### Pantalla de personajes
+Problema: ¿Qué pasa si el usuario busca un personaje que no está en la página actual?
+
+Solución:
 Al abrir la pantalla se solicita la página 1 y se muestra apenas llega. Su respuesta indica el número total de páginas y de personajes. Luego se precargan las páginas restantes en segundo plano, con hasta tres solicitudes de precarga simultáneas. La navegación sigue disponible durante ese proceso.
 
 `CharacterService` guarda cada página recibida en una caché en memoria, identificada por su número. La navegación consulta esa caché y comparte las peticiones que ya estén en curso con la precarga. Si una página falla, el reintento solicita solo las páginas que faltan y conserva las respuestas exitosas. El catálogo se considera completo únicamente cuando están todas las páginas.
@@ -10,60 +27,48 @@ Sin filtros, la pantalla muestra directamente los resultados de la página elegi
 
 Si se filtra antes de terminar la descarga, aparece «Preparando búsqueda…». Si falla una página, aparece un error con opción de reintento; «Sin resultados» se muestra solo cuando la búsqueda completa no encuentra coincidencias. La búsqueda global requiere descargar todo el catálogo porque la API solo ofrece páginas y consultas por ID, sin filtros de búsqueda. La caché se reinicia al recargar la aplicación.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.1.
 
-## Development server
+### Filtros
+Problema: ¿Cómo evitar búsquedas innecesarias?
 
-To start a local development server, run:
+Solución:
+Se agregó un **debounce time** de `300ms` al panel de filtros. Si bien no se hace una petición al backend con el término de búsqueda (por limitaciones del propio backend), el debounce también evita búsquedas innecesarias en caché.
 
-```bash
-ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Favoritos
+Problema 1: ¿Cómo hacer persistente la selección de favoritos del usuario?
 
-## Code scaffolding
+Solución: Se implementó un servicio de guardado en el **localStorage** del navegador. A diferencia de otros almacenamientos como el sessionStorage, aquí se guarda incluso si el usuario reinicia la computadora.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Posible mejora: Conectar mediante un backend un motor de base de datos en el que guardar los favoritos de los usuarios para que los mismos sean accesibles en todos los usuarios donde el usuario inicie sesión (suponiendo que se implementó la funcionalidad de inicio de sesión).
 
-```bash
-ng generate component component-name
-```
+Problema 2: ¿Almaceno todos los datos?
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Solución: Se decidió guardar solamente id y los datos necesarios para mostrar en las tarjetas a fin de no ocupar espacio innecesario en el almacenamiento del navegador.
 
-```bash
-ng generate --help
-```
 
-## Building
+### Episodios y ubicaciones
+Problema: ¿Es necesario crear un caché de episodios y ubicaciones?
 
-To build the project run:
+Solución: A diferencia de los personajes que se pueden buscar y filtrar, ubicaciones y episodios no tienen esa funcionalidad, por ende se optó por realizar la carga de los mismos bajo demanda del usuario.
 
-```bash
-ng build
-```
+### Manejo de Soluciones Inesperadas
+Problema 1: Demora en las respuestas de la API
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Solución: Implementación de mensajes de carga y sekeletons para indicar la carga de componentes de la app. (Se adjuntan imagenes - Ver carpeta referencias 1.png)
 
-## Running unit tests
+Problema 2: Búsqueda sin resultados, error de API, personaje no existente.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Solución: Diseño de mensajes que notifican al cliente en caso de error o pero¿sonajes no encontrados. (Se adjuntan imagenes - Ver carpeta referencias 2.1, 2.2, 2.3.png)
 
-```bash
-ng test
-```
+Problema 3: Algún dato no disponible.
 
-## Running end-to-end tests
+Solución:
+- Imagen no disponible: Se coloca en lugar de la imagen el mensaje "Imagen no disponible" (Se adjuntan imagenes - Ver carpeta referencias 3.1.png)
+- Datos: Mediante switches de JS y operadores ternarios se coloca un texto adecuado a cada dato faltante. (Se adjuntan imagenes - Ver carpeta referencias 3.2.png)
 
-For end-to-end (e2e) testing, run:
 
-```bash
-ng e2e
-```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
