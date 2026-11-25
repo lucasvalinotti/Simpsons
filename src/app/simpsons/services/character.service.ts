@@ -11,8 +11,8 @@ export class CharacterService {
   baseUrl = environment.baseUrl;
   http = inject(HttpClient)
 
-  public getCharacters() {
-    return this.http.get<CharacterResponse>(`${this.baseUrl}/characters`)
+  public getCharacters(page: number) {
+    return this.http.get<CharacterResponse>(`${this.baseUrl}/characters?page=${page}`)
   }
 
 }

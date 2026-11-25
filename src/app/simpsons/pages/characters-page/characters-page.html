@@ -1,4 +1,4 @@
-<main class="characters-page">
+<main class="characters-page characters-list-page">
   <div class="page-content">
     <h1>Personajes</h1>
     <p class="subtitle">Encontrá a tu vecino favorito de Springfield.</p>
@@ -10,8 +10,11 @@
     } @else if (loading()) {
     <p class="result-count" role="status">Cargando personajes...</p>
     } @else {
-    <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ filteredCharacters().length }}
-      personajes</p>
+    @if (hasActiveFilters()) {
+    <p class="result-count">Mostrando {{ filteredCharacters().length }} personajes en esta página</p>
+    } @else {
+    <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ totalCharacters() }} personajes</p>
+    }
 
     @if (visibleCharacters().length) {
     <div class="cards-grid">
@@ -25,7 +28,7 @@
     }
 
     @if (totalPages() > 1) {
-    <app-character-pagination [page]="page()" [totalPages]="totalPages()" (pageChange)="page.set($event)" />
+    <app-character-pagination [page]="page()" [totalPages]="totalPages()" (pageChange)="changePage($event)" />
     }
     }
   </div>

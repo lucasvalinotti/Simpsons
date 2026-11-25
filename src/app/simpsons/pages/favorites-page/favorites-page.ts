@@ -3,9 +3,10 @@ import { CharacterCard } from '../../components/character-card/character-card';
 import { CharacterFilters, CharacterFiltersValue } from '../../components/character-filters/character-filters';
 import { CharacterPagination } from '../../components/character-pagination/character-pagination';
 import { NoResultsState } from '../../components/no-results-state/no-results-state';
-import { CHARACTERS, Character } from '../../characters.data';
+import { CHARACTERS } from '../../characters.data';
 import { FavoritesService } from '../../favorites.service';
 import { ErrorState } from '../../components/error-state/error-state';
+import { Character } from '../../interfaces/CharacterResponse';
 
 @Component({
   selector: 'app-favorites-page',

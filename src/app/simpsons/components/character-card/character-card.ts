@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Character } from '../../characters.data';
+import { Character } from '../../interfaces/CharacterResponse';
 
 @Component({
   selector: 'app-character-card',

@@ -1,5 +1,5 @@
 :host { display: block; min-width: 0; }
-.card { overflow: hidden; min-height: 300px; border: 2px solid #241d35; border-radius: 12px; background: #fff; box-shadow: 5px 5px 0 #241d35; }
+.card { box-sizing: border-box; display: flex; flex-direction: column; height: 100%; overflow: hidden; min-height: 300px; border: 2px solid #241d35; border-radius: 12px; background: #fff; box-shadow: 5px 5px 0 #241d35; }
 .portrait { position: relative; display: grid; place-items: center; height: 162px; overflow: hidden; border-bottom: 2px solid #241d35; background-color: var(--portrait-color); background-image: radial-gradient(#ffffff9c 1.2px, transparent 1.2px); background-size: 10px 10px; }
 .portrait.failed { background-color: #d9c0f5; }
 .portrait img { position: absolute; inset: 0; box-sizing: border-box; width: 100%; height: 100%; padding: 8px 12px; object-fit: contain; object-position: center; }
@@ -8,7 +8,7 @@
 .favorite-button[aria-pressed="true"] { color: #e85091; }
 .favorite-button:focus-visible, .card-body a:focus-visible { outline: 3px solid #241d35; outline-offset: 2px; }
 .image-fallback { font-size: 13px; font-weight: 900; text-align: center; }
-.card-body { box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start; min-height: 136px; padding: 11px 12px 12px; }
+.card-body { box-sizing: border-box; display: flex; flex: 1; flex-direction: column; align-items: flex-start; min-height: 136px; padding: 11px 12px 12px; }
 .status { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border: 1px solid #241d35; border-radius: 10px; background: #dbf6d9; font-size: 10px; font-weight: 900; line-height: 1.1; }
 .status.deceased { background: #eedaf4; }
 .status-dot { width: 5px; height: 5px; border-radius: 50%; background: #241d35; }

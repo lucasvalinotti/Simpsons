@@ -1,14 +1,5 @@
-export interface Character {
-  id: number;
-  name: string;
-  occupation: string;
-  status: 'Vivo' | 'Fallecido' | 'Desconocido';
-  gender: 'Masculino' | 'Femenino' | 'Desconocido';
-  image: string;
-  color: string;
-  age?: number;
-  phrases?: string[];
-}
+import { Character } from "./interfaces/CharacterResponse";
+
 
 // Datos de ejemplo para mostrar el diseño sin depender de una API.
 export const CHARACTERS: Character[] = [

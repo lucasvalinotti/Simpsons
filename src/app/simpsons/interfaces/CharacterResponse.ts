@@ -17,3 +17,16 @@ export interface Result {
   phrases: string[];
   status: string;
 }
+
+
+export interface Character {
+  id: number;
+  name: string;
+  occupation: string;
+  status: 'Vivo' | 'Fallecido' | 'Desconocido';
+  gender: 'Masculino' | 'Femenino' | 'Desconocido';
+  image: string;
+  color: string;
+  age?: number;
+  phrases?: string[];
+}
