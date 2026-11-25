@@ -4,3 +4,4 @@ button { min-width: 34px; min-height: 36px; padding: 0 11px; border: 1.5px solid
 button.active { border-width: 2px; background: #ffdf4b; box-shadow: 2px 2px 0 #241d35; }
 button:disabled { border-color: #aaa7af; color: #aaa7af; cursor: default; }
 button:focus-visible { outline: 2px solid #241d35; outline-offset: 2px; }
+.ellipsis { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; font-weight: 800; }

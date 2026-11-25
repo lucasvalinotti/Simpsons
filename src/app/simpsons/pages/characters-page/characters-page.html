@@ -5,25 +5,29 @@
 
     <app-character-filters #filterControls (filtersChange)="updateFilters($event)" />
 
-    @if (loadError()) {
+    @if (loadError() && !metadataLoaded()) {
     <app-error-state (retry)="retryLoad()" />
-    } @else if (loading()) {
+    } @else if (hasActiveFilters() && catalog() === null) {
+    @if (catalogState() === 'error') {
+    <app-error-state (retry)="retryLoad()" />
+    } @else {
+    <p class="result-count" role="status">Preparando búsqueda…</p>
+    }
+    } @else if (loadError()) {
+    <app-error-state (retry)="retryLoad()" />
+    } @else if (loading() && !hasActiveFilters()) {
     <p class="result-count" role="status">Cargando personajes...</p>
     } @else {
-    @if (hasActiveFilters()) {
-    <p class="result-count">Mostrando {{ filteredCharacters().length }} personajes en esta página</p>
-    } @else {
-    <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ totalCharacters() }} personajes</p>
-    }
+    <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ totalMatches() }} personajes</p>
 
     @if (visibleCharacters().length) {
     <div class="cards-grid">
       @for (character of visibleCharacters(); track character.id) {
-      <app-character-card [character]="character" [isFavorite]="favorites.ids().has(character.id)"
-        (favoriteToggle)="toggleFavorite($event)" />
+      <app-character-card [character]="character" (favoriteToggle)="toggleFavorite(character)"
+        [isFavorite]="favorites.isFavorite(character.id)" />
       }
     </div>
-    } @else {
+    } @else if (hasActiveFilters()) {
     <app-no-results-state (clear)="filterControls.clear()" />
     }
 

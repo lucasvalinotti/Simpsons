@@ -1,0 +1,31 @@
+<main class="characters-page characters-list-page">
+  <div class="page-content">
+    <h1>Episodios</h1>
+    <p class="subtitle">Explorá las historias de Springfield temporada por temporada.</p>
+
+    @if (loadError()) {
+      <app-error-state title="No pudimos cargar los episodios" (retry)="retryLoad()" />
+    } @else if (loading()) {
+      <p class="result-count" role="status">Cargando episodios...</p>
+    } @else {
+      <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ totalEpisodes() }} episodios</p>
+      @if (episodes().length) {
+        <div class="cards-grid">
+          @for (episode of episodes(); track episode.id) {
+            <app-episode-card [episode]="episode" />
+          }
+        </div>
+      } @else {
+        <section class="episode-empty">
+          <h2>No hay episodios en esta página</h2>
+          <button type="button" (click)="changePage(1)">Volver a la primera página</button>
+        </section>
+      }
+    }
+
+    @if (totalPages() > 1) {
+      <app-character-pagination ariaLabel="Páginas de episodios" [page]="page()"
+        [totalPages]="totalPages()" (pageChange)="changePage($event)" />
+    }
+  </div>
+</main>

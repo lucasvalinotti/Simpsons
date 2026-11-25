@@ -1,0 +1,53 @@
+<main class="location-detail-page episode-detail-page">
+  <div class="detail-content">
+    <a class="back-link" routerLink="/episodes">Volver a episodios</a>
+
+    @if (loadState() === 'loading') {
+      <div class="detail-skeleton" role="status" aria-label="Cargando episodio">
+        <div class="skeleton image-skeleton"></div>
+        <div class="skeleton-info">
+          <div class="skeleton title-skeleton"></div>
+          <div class="skeleton line-skeleton"></div>
+          <div class="skeleton line-skeleton"></div>
+        </div>
+      </div>
+    } @else if (loadState() === 'ready' && episode(); as current) {
+      <div class="detail-layout">
+        <div class="location-image episode-image" [class.no-image]="!imageUrl() || imageFailed()">
+          @if (imageUrl() && !imageFailed()) {
+            <img [src]="imageUrl()" [alt]="current.name" (error)="imageFailed.set(true)" />
+          } @else {
+            <span>Imagen no disponible</span>
+          }
+        </div>
+        <div class="detail-info">
+          <span class="location-use episode-meta">Temporada {{ current.season }} · Episodio {{ current.episode_number }}</span>
+          <h1>{{ current.name }}</h1>
+          <dl>
+            <div><dt>Temporada</dt><dd>{{ current.season }}</dd></div>
+            <div><dt>Número de episodio</dt><dd>{{ current.episode_number }}</dd></div>
+            <div><dt>Fecha de estreno</dt><dd>{{ current.airdate | spanishDate }}</dd></div>
+          </dl>
+          <section class="description">
+            <h2>Sinopsis</h2>
+            <p>{{ current.synopsis || 'No hay sinopsis disponible.' }}</p>
+          </section>
+          @if (current.description) {
+            <section class="first-appearance">
+              <h2>Sobre el episodio</h2>
+              <p>{{ current.description }}</p>
+            </section>
+          }
+        </div>
+      </div>
+    } @else if (loadState() === 'notFound') {
+      <section class="missing-location" role="status">
+        <h2>Episodio inexistente</h2>
+        <p>No encontramos el episodio solicitado.</p>
+        <a routerLink="/episodes">Explorar episodios</a>
+      </section>
+    } @else {
+      <app-error-state title="No pudimos cargar el episodio" (retry)="retryLoad()" />
+    }
+  </div>
+</main>

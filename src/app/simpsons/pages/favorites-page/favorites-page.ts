@@ -1,63 +1,100 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { EMPTY, catchError, from, mergeMap, tap } from 'rxjs';
 import { CharacterCard } from '../../components/character-card/character-card';
 import { CharacterFilters, CharacterFiltersValue } from '../../components/character-filters/character-filters';
 import { CharacterPagination } from '../../components/character-pagination/character-pagination';
-import { NoResultsState } from '../../components/no-results-state/no-results-state';
-import { CHARACTERS } from '../../characters.data';
-import { FavoritesService } from '../../favorites.service';
 import { ErrorState } from '../../components/error-state/error-state';
-import { Character } from '../../interfaces/CharacterResponse';
+import { NoResultsState } from '../../components/no-results-state/no-results-state';
+import { CharacterService } from '../../services/character.service';
+import { FavoritesService } from '../../services/favorites.service';
+import { FavoriteCharacter } from '../../interfaces/FavoriteCharacter';
+
 
 @Component({
   selector: 'app-favorites-page',
-  imports: [CharacterCard, CharacterFilters, CharacterPagination, NoResultsState, ErrorState],
+  imports: [CharacterCard, CharacterFilters, CharacterPagination, ErrorState, NoResultsState],
   templateUrl: './favorites-page.html',
   styleUrl: './favorites-page.css',
 })
 export default class FavoritesPage {
-  readonly favorites = inject(FavoritesService);
-  private readonly pageSize = 6;
-  readonly characters = signal<Character[]>([]);
-  readonly loadError = signal(false);
+  readonly favoritesService = inject(FavoritesService);
+  private readonly characterService = inject(CharacterService);
+  private readonly pageSize = 20;
+  private genderRequestRunning = false;
   readonly filters = signal<CharacterFiltersValue>({ name: '', status: '', gender: '' });
   readonly page = signal(1);
+  readonly genderLoadState = signal<'idle' | 'loading' | 'error'>('idle');
+  readonly needsGender = computed(() => !!this.filters().gender &&
+    this.favoritesService.favorites().some((favorite) => !favorite.gender?.trim()));
 
-  constructor() {
-    this.retryLoad();
-  }
-
-  readonly filteredCharacters = computed(() => {
+  readonly filteredFavorites = computed(() => {
     const { name, status, gender } = this.filters();
     const search = name.trim().toLocaleLowerCase('es');
-    return this.characters().filter((character) =>
-      this.favorites.ids().has(character.id) &&
-      character.name.toLocaleLowerCase('es').includes(search) &&
-      (!status || character.status === status) &&
-      (!gender || character.gender === gender)
+    return this.favoritesService.favorites().filter((favorite) =>
+      favorite.name.toLocaleLowerCase('es').includes(search) &&
+      (!status || this.displayStatus(favorite) === status) &&
+      (!gender || this.displayGender(favorite) === gender)
     );
   });
-  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.filteredCharacters().length / this.pageSize)));
-  readonly visibleCharacters = computed(() => this.filteredCharacters().slice((this.page() - 1) * this.pageSize, this.page() * this.pageSize));
-  readonly firstResult = computed(() => this.filteredCharacters().length ? (this.page() - 1) * this.pageSize + 1 : 0);
-  readonly lastResult = computed(() => Math.min(this.page() * this.pageSize, this.filteredCharacters().length));
+  readonly totalMatches = computed(() => this.filteredFavorites().length);
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalMatches() / this.pageSize)));
+  readonly currentPage = computed(() => Math.min(this.page(), this.totalPages()));
+  readonly visibleFavorites = computed(() => this.filteredFavorites().slice(
+    (this.currentPage() - 1) * this.pageSize, this.currentPage() * this.pageSize
+  ));
+  readonly firstResult = computed(() => this.visibleFavorites().length
+    ? (this.currentPage() - 1) * this.pageSize + 1 : 0);
+  readonly lastResult = computed(() => this.visibleFavorites().length
+    ? Math.min(this.currentPage() * this.pageSize, this.totalMatches()) : 0);
 
-  updateFilters(value: CharacterFiltersValue): void {
-    this.filters.set(value);
+  updateFilters(filters: CharacterFiltersValue): void {
+    this.filters.set(filters);
     this.page.set(1);
+    if (filters.gender) this.prepareGender();
   }
 
-  toggleFavorite(id: number): void {
-    this.favorites.toggle(id);
-    this.page.set(Math.min(this.page(), this.totalPages()));
+  changePage(page: number): void {
+    if (page >= 1 && page <= this.totalPages()) this.page.set(page);
   }
 
-  retryLoad(): void {
-    try {
-      if (!Array.isArray(CHARACTERS)) throw new Error('Datos de personajes inválidos');
-      this.characters.set(CHARACTERS);
-      this.loadError.set(false);
-    } catch {
-      this.loadError.set(true);
+  toggleFavorite(favorite: FavoriteCharacter): void {
+    this.favoritesService.toggleFavorites(favorite);
+    this.page.update((page) => Math.min(page, this.totalPages()));
+  }
+
+  prepareGender(): void {
+    if (this.genderRequestRunning) return;
+    const missing = this.favoritesService.favorites().filter((favorite) => !favorite.gender?.trim());
+    if (!missing.length) {
+      this.genderLoadState.set('idle');
+      return;
     }
+
+    this.genderRequestRunning = true;
+    this.genderLoadState.set('loading');
+    from(missing).pipe(
+      mergeMap((favorite) => this.characterService.getCharacterById(String(favorite.id)).pipe(
+        tap((character) => this.favoritesService.updateGender(favorite.id, character.gender)),
+        catchError(() => EMPTY),
+      ), 3),
+    ).subscribe({
+      complete: () => {
+        this.genderRequestRunning = false;
+        this.genderLoadState.set(this.favoritesService.favorites().some((favorite) => !favorite.gender?.trim())
+          ? 'error' : 'idle');
+      },
+    });
+  }
+
+  private displayStatus(favorite: FavoriteCharacter): string {
+    if (favorite.status === 'Alive') return 'Vivo';
+    if (favorite.status === 'Dead' || favorite.status === 'Deceased') return 'Fallecido';
+    return favorite.status;
+  }
+
+  private displayGender(favorite: FavoriteCharacter): string {
+    if (favorite.gender === 'Male') return 'Masculino';
+    if (favorite.gender === 'Female') return 'Femenino';
+    return favorite.gender ?? 'Desconocido';
   }
 }

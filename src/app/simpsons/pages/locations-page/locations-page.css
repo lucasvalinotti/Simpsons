@@ -1,0 +1,5 @@
+@import '../characters-page/characters-page.css';
+.location-empty { padding: 26px; border: 2px solid #241d35; border-radius: 11px; background: #fff; text-align: center; }
+.location-empty h2 { margin: 0 0 14px; font-family: var(--font-titulos, "Trebuchet MS", Arial, sans-serif); }
+.location-empty button { min-height: 38px; padding: 0 14px; border: 2px solid #241d35; border-radius: 6px; background: #ffdf4b; color: #241d35; font: inherit; font-weight: 900; cursor: pointer; }
+.location-empty button:focus-visible { outline: 3px solid #241d35; outline-offset: 3px; }

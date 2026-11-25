@@ -20,11 +20,15 @@
     <nav class="navigation" aria-label="Navegación principal">
       <a class="nav-link" routerLink="/characters" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">Personajes</a>
+      <a class="nav-link" routerLink="/locations" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Ubicaciones</a>
+      <a class="nav-link" routerLink="/episodes" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Episodios</a>
       <a class="nav-link favorites-link" routerLink="/favorites" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">
         <span aria-hidden="true">♡</span>
         <span>Favoritos</span>
-        <span class="favorites-count" [attr.aria-label]="favorites.ids().size + ' favoritos'">{{ favorites.ids().size }}</span>
+        <span class="favorites-count">{{ favorites.favorites().length}}</span>
       </a>
     </nav>
   </div>

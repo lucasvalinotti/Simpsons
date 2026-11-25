@@ -1,0 +1,31 @@
+<main class="characters-page characters-list-page">
+  <div class="page-content">
+    <h1>Ubicaciones</h1>
+    <p class="subtitle">Recorré los lugares más conocidos de Springfield.</p>
+
+    @if (loadError()) {
+      <app-error-state title="No pudimos cargar las ubicaciones" (retry)="retryLoad()" />
+    } @else if (loading()) {
+      <p class="result-count" role="status">Cargando ubicaciones...</p>
+    } @else {
+      <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ totalLocations() }} ubicaciones</p>
+      @if (locations().length) {
+        <div class="cards-grid">
+          @for (location of locations(); track location.id) {
+            <app-location-card [location]="location" />
+          }
+        </div>
+      } @else {
+        <section class="location-empty">
+          <h2>No hay ubicaciones en esta página</h2>
+          <button type="button" (click)="changePage(1)">Volver a la primera página</button>
+        </section>
+      }
+    }
+
+    @if (totalPages() > 1) {
+      <app-character-pagination ariaLabel="Páginas de ubicaciones" [page]="page()"
+        [totalPages]="totalPages()" (pageChange)="changePage($event)" />
+    }
+  </div>
+</main>
