@@ -1,8 +1,12 @@
 <nav class="pagination" aria-label="Páginas de personajes">
   <button type="button" [disabled]="page === 1" (click)="pageChange.emit(page - 1)">Anterior</button>
-  @for (number of pages; track number) {
-  <button type="button" [class.active]="page === number" [attr.aria-current]="page === number ? 'page' : null"
-    (click)="pageChange.emit(number)">{{ number }}</button>
+  @for (item of pages; track $index) {
+    @if (item === '…') {
+      <span class="ellipsis" aria-hidden="true">…</span>
+    } @else {
+      <button type="button" [class.active]="page === item" [attr.aria-current]="page === item ? 'page' : null"
+        (click)="pageChange.emit(item)">{{ item }}</button>
+    }
   }
   <button type="button" [disabled]="page === totalPages" (click)="pageChange.emit(page + 1)">Siguiente</button>
 </nav>

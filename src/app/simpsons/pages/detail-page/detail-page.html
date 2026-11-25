@@ -1,45 +1,80 @@
 <main class="detail-page">
   <div class="detail-content">
-    @if (details(); as displayed) {
-      <a class="back-link" routerLink="/characters">Volver a personajes</a>
-
-      <div class="detail-layout">
-        <div class="portrait" [style.--portrait-color]="displayed.color" [class.no-image]="!displayed.image || imageFailedFor() === displayed.id">
-          @if (displayed.image && imageFailedFor() !== displayed.id) {
-            <img [src]="displayed.image" [alt]="displayed.name" (error)="imageFailedFor.set(displayed.id)" />
-            <button class="favorite-button" type="button" [attr.aria-label]="favorites.ids().has(displayed.id) ? 'Quitar de favoritos a ' + displayed.name : 'Agregar a favoritos a ' + displayed.name" [attr.aria-pressed]="favorites.ids().has(displayed.id)" (click)="favorites.toggle(displayed.id)">{{ favorites.ids().has(displayed.id) ? '♥' : '♡' }}</button>
-          } @else {
-            <span>Imagen no disponible</span>
-          }
-        </div>
-
-        <div class="detail-info">
-          <span class="status" [class.unknown]="displayed.status === 'Desconocido'" [class.deceased]="displayed.status === 'Fallecido'"><span class="status-dot"></span>{{ displayed.status }}</span>
-          <h1>{{ displayed.name }}</h1>
-
-          <dl class="facts">
-            <div class="fact"><dt>Edad</dt><dd>{{ displayed.age }}</dd></div>
-            <div class="fact"><dt>Género</dt><dd>{{ displayed.gender }}</dd></div>
-            <div class="fact"><dt>Ocupación</dt><dd>{{ displayed.occupation }}</dd></div>
-            <div class="fact"><dt>Estado</dt><dd>{{ displayed.status }}</dd></div>
-          </dl>
-
-          <section class="phrases">
-            <h2>Frases del personaje</h2>
-            @if (displayed.phrases.length) {
-              <ul>
-                @for (phrase of displayed.phrases; track phrase) {
-                  <li>«{{ phrase }}»</li>
-                }
-              </ul>
-            } @else {
-              <p>No hay frases disponibles.</p>
-            }
-          </section>
-        </div>
+    @if (loadState() === 'loading') {
+    <div class="detail-skeleton" role="status" aria-label="Cargando personaje">
+      <div class="skeleton skeleton-status"></div>
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton-facts">
+        <div class="skeleton skeleton-fact"></div>
+        <div class="skeleton skeleton-fact"></div>
+        <div class="skeleton skeleton-fact"></div>
+        <div class="skeleton skeleton-fact"></div>
       </div>
+      <div class="skeleton skeleton-section-title"></div>
+      <div class="skeleton skeleton-line"></div>
+      <div class="skeleton skeleton-line"></div>
+    </div>
+    } @else if (loadState() === 'ready' && character) {
+    <a class="back-link" routerLink="/characters">Volver a personajes</a>
+
+    <div class="detail-layout">
+      <div class="portrait" [style.--portrait-color]="'#a9dffc'"
+        [class.no-image]="!portraitUrl() || imageFailedFor() === character.id">
+        @if (portraitUrl() && imageFailedFor() !== character.id) {
+        <img [src]="portraitUrl()" [alt]="character.name" (error)="imageFailedFor.set(character.id)" />
+        } @else {
+        <span>Imagen no disponible</span>
+        }
+        <button class="favorite-button" type="button"
+          [attr.aria-label]="favorites.isFavorite(character.id) ? 'Quitar de favoritos a ' + character.name : 'Agregar a favoritos a ' + character.name"
+          [attr.aria-pressed]="favorites.isFavorite(character.id)"
+          (click)="favorites.toggleFavorites(character)">{{
+          favorites.isFavorite(character.id) ? '♥' : '♡' }}</button>
+      </div>
+
+      <div class="detail-info">
+        <span class="status" [class.unknown]="character.status === 'Desconocido'"
+          [class.deceased]="character.status === 'Fallecido'"><span class="status-dot"></span>{{ character.status
+          }}</span>
+        <h1>{{ character.name }}</h1>
+
+        <dl class="facts">
+          <div class="fact">
+            <dt>Edad</dt>
+            <dd>{{ character.age ? character.age : 'Desconocido' }}</dd>
+          </div>
+          <div class="fact">
+            <dt>Género</dt>
+            <dd>{{ character.gender ? character.gender : 'Desconocido' }}</dd>
+          </div>
+          <div class="fact">
+            <dt>Ocupación</dt>
+            <dd>{{ character.occupation ? character.occupation : 'Desconocido' }}</dd>
+          </div>
+          <div class="fact">
+            <dt>Estado</dt>
+            <dd>{{ character.status ? character.status : 'Desconocido' }}</dd>
+          </div>
+        </dl>
+
+        <section class="phrases">
+          <h2>Frases del personaje</h2>
+          @if (character.phrases.length) {
+          <ul>
+            @for (phrase of character.phrases; track phrase) {
+            <li>«{{ phrase }}»</li>
+            }
+          </ul>
+          } @else {
+          <p>No hay frases disponibles.</p>
+          }
+        </section>
+      </div>
+    </div>
+    } @else if (loadState() === 'notFound') {
+    <app-character-not-found />
     } @else {
-      <app-character-not-found />
+    <app-error-state title="No pudimos cargar el personaje" (retry)="loadCharacter()" />
     }
   </div>
 </main>

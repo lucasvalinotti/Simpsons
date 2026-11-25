@@ -1,28 +1,18 @@
-<main class="characters-page">
+<main class="characters-page characters-list-page">
   <div class="page-content">
     <h1>Favoritos</h1>
-    <p class="subtitle">Tus vecinos preferidos de Springfield, todos en un mismo lugar.</p>
+    <p class="subtitle">Tus vecinos favoritos de Springfield en un solo lugar.</p>
 
-    <app-character-filters #filterControls (filtersChange)="updateFilters($event)" />
-
-    @if (loadError()) {
-      <app-error-state (retry)="retryLoad()" />
+    @if (favoritesService.favorites().length) {
+      <div class="cards-grid">
+        @for (favorite of favoritesService.favorites(); track favorite.id) {
+          <app-character-card [character]="favorite" [isFavorite]="favoritesService.isFavorite(favorite.id)"
+            (favoriteToggle)="favoritesService.toggleFavorites(favorite)" />
+        }
+      </div>
     } @else {
-      <p class="result-count">Mostrando {{ firstResult() }}–{{ lastResult() }} de {{ filteredCharacters().length }} personajes</p>
-
-      @if (visibleCharacters().length) {
-        <div class="cards-grid">
-          @for (character of visibleCharacters(); track character.id) {
-            <app-character-card [character]="character" [isFavorite]="true" (favoriteToggle)="toggleFavorite($event)" />
-          }
-        </div>
-      } @else {
-        <app-no-results-state [favoritesEmpty]="!favorites.ids().size" (clear)="filterControls.clear()" />
-      }
-
-      @if (totalPages() > 1) {
-        <app-character-pagination [page]="page()" [totalPages]="totalPages()" (pageChange)="page.set($event)" />
-      }
+      <app-no-results-state [favoritesEmpty]="true" />
     }
+
   </div>
 </main>

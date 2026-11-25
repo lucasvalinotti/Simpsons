@@ -10,7 +10,21 @@ export class CharacterPagination {
   @Input() totalPages = 1;
   @Output() pageChange = new EventEmitter<number>();
 
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
+  get pages(): (number | '…')[] {
+    const numbers = [...new Set([1, 2, this.page, this.totalPages - 1, this.totalPages])]
+      .filter((number) => number >= 1 && number <= this.totalPages)
+      .sort((a, b) => a - b);
+    const pages: (number | '…')[] = [];
+
+    for (const number of numbers) {
+      const previous = pages.at(-1);
+      if (typeof previous === 'number') {
+        if (number - previous === 2) pages.push(previous + 1);
+        else if (number - previous > 2) pages.push('…');
+      }
+      pages.push(number);
+    }
+
+    return pages;
   }
 }

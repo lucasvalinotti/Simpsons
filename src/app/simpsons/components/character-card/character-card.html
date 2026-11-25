@@ -1,27 +1,31 @@
 <article class="card">
-  <div class="portrait" [style.--portrait-color]="character.color" [class.failed]="imageFailed()">
-    @if (character.image && !imageFailed()) {
-      <img [src]="character.image" [alt]="character.name" [class.hidden]="loading()" (load)="onImageLoad()" (error)="onImageError()" />
+  <div class="portrait" [style.--portrait-color]="portraitColor" [class.failed]="imageFailed()">
+    @if (imageUrl && !imageFailed()) {
+    <img [src]="imageUrl" [alt]="character.name" [class.hidden]="loading()" (load)="onImageLoad()"
+      [routerLink]="['/character', character.id]" (error)="onImageError()" />
     }
     @if (loading()) {
-      <div class="image-skeleton shimmer" aria-hidden="true"></div>
+    <div class="image-skeleton shimmer" aria-hidden="true"></div>
     } @else if (imageFailed()) {
-      <span class="image-fallback">Imagen no disponible</span>
+    <span class="image-fallback">Imagen no disponible</span>
     }
-    <button class="favorite-button" type="button" [attr.aria-label]="isFavorite ? 'Quitar de favoritos a ' + character.name : 'Agregar a favoritos a ' + character.name" [attr.aria-pressed]="isFavorite" (click)="favoriteToggle.emit(character.id)">{{ isFavorite ? '♥' : '♡' }}</button>
+    <button class="favorite-button" type="button"
+      [attr.aria-label]="isFavorite ? 'Quitar de favoritos a ' + character.name : 'Agregar a favoritos a ' + character.name"
+      [attr.aria-pressed]="isFavorite" (click)="favoriteToggle.emit(character.id)">{{ isFavorite ? '♥' : '♡' }}</button>
   </div>
 
   <div class="card-body">
     @if (loading()) {
-      <span class="skeleton status-skeleton shimmer"></span>
-      <span class="skeleton title-skeleton shimmer"></span>
-      <span class="skeleton occupation-skeleton shimmer"></span>
-      <span class="skeleton button-skeleton shimmer"></span>
+    <span class="skeleton status-skeleton shimmer"></span>
+    <span class="skeleton title-skeleton shimmer"></span>
+    <span class="skeleton occupation-skeleton shimmer"></span>
+    <span class="skeleton button-skeleton shimmer"></span>
     } @else {
-      <span class="status" [class.deceased]="character.status === 'Fallecido'"><span class="status-dot"></span>{{ character.status }}</span>
-      <h2>{{ character.name }}</h2>
-      <p>{{ character.occupation }}</p>
-      <a [routerLink]="['/character', character.id]">Ver ficha</a>
+    <span class="status" [class.deceased]="character.status === 'Fallecido'"><span class="status-dot"></span>{{
+      character.status }}</span>
+    <h2 [routerLink]="['/character', character.id]">{{ character.name }}</h2>
+    <p>{{ character.occupation }}</p>
+    <a [routerLink]="['/character', character.id]">Ver ficha</a>
     }
   </div>
 </article>

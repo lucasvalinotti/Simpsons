@@ -24,7 +24,7 @@
         [routerLinkActiveOptions]="{ exact: true }">
         <span aria-hidden="true">♡</span>
         <span>Favoritos</span>
-        <span class="favorites-count" [attr.aria-label]="favorites.ids().size + ' favoritos'">{{ favorites.ids().size }}</span>
+        <span class="favorites-count">{{ favorites.favorites().length}}</span>
       </a>
     </nav>
   </div>
