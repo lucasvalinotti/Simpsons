@@ -13,7 +13,7 @@ npm start
 
 Abrí http://localhost:4200. Para detener el servidor, presioná Ctrl + C.
 
-## Desiciones técnicas
+## Desiciones y problemas encontrados
 
 ### Pantalla de personajes
 Problema: ¿Qué pasa si el usuario busca un personaje que no está en la página actual?
