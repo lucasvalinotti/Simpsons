@@ -1,3 +1,9 @@
 @import '../location-detail-page/location-detail-page.css';
-.episode-image { background: #ffe17d; }
-.episode-meta { background: #ffe891; }
+
+.episode-image {
+  background: #ffe17d;
+}
+
+.episode-meta {
+  background: #ffe891;
+}

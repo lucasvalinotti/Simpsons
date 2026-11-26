@@ -7,4 +7,4 @@ import { RouterLink } from '@angular/router';
   templateUrl: './character-not-found.html',
   styleUrl: '../state-panel.css',
 })
-export class CharacterNotFound {}
+export class CharacterNotFound { }

@@ -1,12 +1,12 @@
 <section class="state-panel">
   <span class="state-icon" aria-hidden="true">?</span>
   @if (favoritesEmpty) {
-    <h2>Todavía no agregaste favoritos</h2>
-    <p>Explorá el directorio y guardá a tus vecinos preferidos.</p>
-    <a routerLink="/characters">Explorar personajes</a>
+  <h2>Todavía no agregaste favoritos</h2>
+  <p>Explorá el directorio y guardá a tus vecinos preferidos.</p>
+  <a routerLink="/characters">Explorar personajes</a>
   } @else {
-    <h2>No encontramos personajes</h2>
-    <p>Probá con otro nombre o ajustá los filtros.</p>
-    <button type="button" (click)="clear.emit()">Limpiar búsqueda y filtros</button>
+  <h2>No encontramos personajes</h2>
+  <p>Probá con otro nombre o ajustá los filtros.</p>
+  <button type="button" (click)="clear.emit()">Limpiar búsqueda y filtros</button>
   }
 </section>
